@@ -32,29 +32,28 @@ st.subheader("Current Inventory from Google Sheets")
 st.dataframe(df)
 
 # -----------------------------------------------------------------------------
-# Add Calendar for Projections
+# Weekly Projections (for the next 4 weeks)
 
-# Function to generate the current month's calendar
-def get_month_calendar():
+def get_weekly_projections(weeks=4):
+    """Generates a DataFrame with weeks and projection placeholders."""
     today = datetime.today()
-    start_date = today.replace(day=1)
-    num_days = (today.replace(month=today.month % 12 + 1, day=1) - start_date).days
+    weeks_data = []
     
-    # Create a DataFrame for the current month with dates
-    calendar_df = pd.DataFrame({
-        "Date": [start_date + timedelta(days=i) for i in range(num_days)],
-        "Projection": [0] * num_days  # Initialize projections with 0
-    })
+    for week in range(weeks):
+        start_of_week = today + timedelta(days=week*7)
+        end_of_week = start_of_week + timedelta(days=6)
+        week_label = f"Week {week + 1} ({start_of_week.strftime('%b %d')} - {end_of_week.strftime('%b %d')})"
+        weeks_data.append({"Week": week_label, "Projection": 0})  # Initialize projections with 0
     
-    return calendar_df
+    return pd.DataFrame(weeks_data)
 
-# Load the calendar for the current month
-calendar_df = get_month_calendar()
+# Load the weekly projections for the next 4 weeks
+projections_df = get_weekly_projections(weeks=4)
 
-st.subheader("Edit Projections for the Current Month")
+st.subheader("Edit Sales Projections for the Next Few Weeks")
 
-# Editable table for projections
-edited_df = st.experimental_data_editor(calendar_df, num_rows="dynamic")
+# Editable table for projections using st.data_editor
+edited_df = st.data_editor(projections_df, num_rows="dynamic")
 
 # Display the editable DataFrame
 st.write("Current Projections", edited_df)
@@ -66,7 +65,7 @@ st.subheader("Projection Graph")
 
 # Create a graph using Altair
 projection_chart = alt.Chart(edited_df).mark_line().encode(
-    x="Date:T",
+    x="Week:N",
     y="Projection:Q"
 ).properties(
     width=700,
