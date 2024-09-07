@@ -1,3 +1,20 @@
+"""
+Functionalities needed
+
+
+
+
+
+
+
+
+"""
+
+
+
+
+
+
 from collections import defaultdict
 from pathlib import Path
 import sqlite3
@@ -5,6 +22,7 @@ import sqlite3
 import streamlit as st
 import altair as alt
 import pandas as pd
+
 
 # Set the title and favicon that appear in the Browser's tab bar.
 st.set_page_config(
