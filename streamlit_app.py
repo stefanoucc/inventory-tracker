@@ -1,7 +1,10 @@
 """
 Functionalities needed
 
-
+1. We are able to see the current inventory
+2. We get alerts about running low on certain products. 
+    2.1 email alerts about low flavors/mgs 
+3. Think about how to incorporate sales projections.     
 
 
 
