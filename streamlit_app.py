@@ -44,6 +44,10 @@ def extract_mg(product_name):
         return "6mg"
     elif "9mg" in product_name:
         return "9mg"
+    elif "1.5mg" in product_name:
+        return "1.5mg"
+    elif "11mg" in product_name:
+        return "11mg"
     return None
 
 # Add a column for mg type (3mg, 6mg, 9mg)
@@ -64,20 +68,25 @@ projection_end_date = projection_start_date + timedelta(days=6)
 st.subheader("Highlights: Stock Status")
 
 # Get inventory counts for each mg category
+total_1p5mg = inventory_df.loc[inventory_df['Current Inventory'] == 'Total 1.5mg', 'Total Mg'].values[0]
 total_3mg = inventory_df.loc[inventory_df['Current Inventory'] == 'Total 3mg', 'Total Mg'].values[0]
 total_6mg = inventory_df.loc[inventory_df['Current Inventory'] == 'Total 6mg', 'Total Mg'].values[0]
 total_9mg = inventory_df.loc[inventory_df['Current Inventory'] == 'Total 9mg', 'Total Mg'].values[0]
+total_11mg = inventory_df.loc[inventory_df['Current Inventory'] == 'Total 11mg', 'Total Mg'].values[0]
 
 # Get projections for each mg category
+projection_1p5mg = weekly_projections.get('1.5mg', 5)  # Default to 15 if no data available
 projection_3mg = weekly_projections.get('3mg', 15)  # Default to 15 if no data available
 projection_6mg = weekly_projections.get('6mg', 15)  # Default to 15 if no data available
 projection_9mg = weekly_projections.get('9mg', 8)   # Default to 8 if no data available
+projection_11mg = weekly_projections.get('11mg', 5)  # Default to 15 if no data available
 
 # Calculate remaining weeks of stock
+weeks_left_1p5mg = total_1p5mg / projection_1p5mg
 weeks_left_3mg = total_3mg / projection_3mg
 weeks_left_6mg = total_6mg / projection_6mg
 weeks_left_9mg = total_9mg / projection_9mg
-
+weeks_left_11mg = total_11mg / projection_11mg
 # Display alerts based on the calculated weeks of stock
 if weeks_left_3mg < 2:
     st.error(f"3mg: Alert, stock is running low, it is only enough for {weeks_left_3mg:.2f} weeks")
